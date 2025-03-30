@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
+        }
+        .quiz-container {
+            width: 50%;
+            margin: auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0px 0px 10px gray;
+            border-radius: 10px;
+            margin-top: 50px;
+            display: none;
+        }
+        img {
+            width: 200px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+        .options button, .anime-selection button {
+            display: block;
+            width: 100%;
+            margin: 5px 0;
+            padding: 10px;
+            background: blue;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .options button:hover, .anime-selection button:hover {
+            background: darkblue;
+        }
+        #timer {
+            font-size: 18px;
+            margin-top: 10px;
+            font-weight: bold;
+            color: red;
+        }
+        .anime-selection img {
+            width: 300px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="anime-selection">
+        <img src="narutobg.jpg" alt="Naruto">
+        <button onclick="startQuiz('naruto')">Naruto Quiz</button>
+        <img src="opbg.jpg" alt="One Piece">
+        <button onclick="startQuiz('onepiece')">One Piece Quiz</button>
+    </div>
+    
+    <div class="quiz-container">
+        <img id="question-image" src="" alt="Anime Character">
+        <h2>Who's this character?</h2>
+        <div class="options" id="options-container"></div>
+        <p id="timer">Time left: 7s</p>
+        <p id="score" style="display: none;">Score: 0</p>
+    </div>
+
+    <script>
+        const quizzes = {
+            naruto: [
+                { image: "jiraiya.jpg", answer: "Jiraiya", options: ["Kakashi Hatake",  "Orochimaru", "Jiraiya", "Minato Namikaze"] },
+                { image: "sasuke.jpg", answer: "Sasuke Uchiha", options: ["Naruto Uzumaki", "Itachi Uchiha", "Obito Uchiha", "Sasuke Uchiha"] },
+                { image: "106.jpg", answer: "Tsunade", options: [ "Tsunade", "Hashirama Senju", "Obito Uchiha", "Kakashi Hatake"] },
+                { image: "zabuza.jpg", answer: "Zabuza Momochi", options: ["Kisame Hoshigaki", "Madara Uchiha", "Zabuza Momochi", "Hidan"] },
+                { image: "kakashi hatake.jpg", answer: "Kakashi Hatake", options: ["Obito Uchiha", "Kakashi Hatake", "Itachi Uchiha", "Madara Uchiha"] },
+                { image: "pain.jpg", answer: "Pain", options: ["Nagato", "Itachi Uchiha", "Pain", "Madara Uchiha"] },
+                { image: "itachi.jpg", answer: "Itachi Uchiha", options: ["Sasuke Uchiha", "Itachi Uchiha", "Madara Uchiha", "Obito Uchiha"] },
+                { image: "rock lee.jpg", answer: "Rock Lee", options: ["Neji Hyuga", "Rock Lee", "Might Guy", "Gaara"] }
+            ],
+            onepiece: [
+                { image: "ace.jpg", answer: "Portgas D. Ace", options: ["Portgas D. Ace", "Sabo",  "Shanks", "Gol D. Roger"] },
+                { image: "chopper.jpg", answer: "Tony Tony Chopper", options: ["Brook",  "Franky", "Tony Tony Chopper", "Usopp"] },
+                { image: "law.jpg", answer: "Trafalgar D. Law", options: ["Eustass Kid", "Trafalgar D. Law", "Zoro", "Sanji"] },
+                { image: "zoro.jpg", answer: "Roronoa Zoro", options: ["Sanji",  "Brook", "Roronoa Zoro", "Mihawk"] },
+                { image: "sanji.jpg", answer: "Sanji", options: ["Sanji", "Franky", "Brook", "Nami"] },
+                { image: "luffy.jpg", answer: "Monkey D. Luffy", options: ["Zoro", "Sanji", "Monkey D. Luffy", "Shanks"] }
+            ]
+        };
+
+        let currentQuiz = [];
+        let currentQuestion = 0;
+        let score = 0;
+        let timeLeft = 7;
+        let timerInterval;
+
+        function startQuiz(anime) {
+            currentQuiz = quizzes[anime];
+            currentQuestion = 0;
+            score = 0;
+            document.getElementById("score").style.display = "block";
+            document.getElementById("score").textContent = "Score: " + score;
+            document.body.style.backgroundImage = `url(${anime === 'naruto' ? 'nqbg.jpg' : ''})`;
+            document.querySelector(".anime-selection").style.display = "none";
+            document.querySelector(".quiz-container").style.display = "block";
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            document.getElementById("question-image").src = currentQuiz[currentQuestion].image;
+            const optionsContainer = document.getElementById("options-container");
+            optionsContainer.innerHTML = "";
+            currentQuiz[currentQuestion].options.forEach(option => {
+                const button = document.createElement("button");
+                button.textContent = option;
+                button.onclick = () => handleAnswer(option);
+                optionsContainer.appendChild(button);
+            });
+            timeLeft = 7;
+            document.getElementById("timer").textContent = `Time left: ${timeLeft}s`;
+            clearInterval(timerInterval);
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        function updateTimer() {
+            timeLeft--;
+            document.getElementById("timer").textContent = `Time left: ${timeLeft}s`;
+            if (timeLeft === 0) {
+                nextQuestion();
+            }
+        }
+
+        function handleAnswer(selected) {
+            clearInterval(timerInterval);
+            if (selected === currentQuiz[currentQuestion].answer) {
+                score++;
+                document.getElementById("score").textContent = "Score: " + score;
+            }
+            nextQuestion();
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion < currentQuiz.length) {
+                loadQuestion();
+            } else {
+                alert("Quiz Completed! Your score: " + score);
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>

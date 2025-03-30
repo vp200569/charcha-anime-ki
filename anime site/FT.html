@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Fan Theories</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: black;
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            margin-top: 20px;
+        }
+        .anime-list img {
+            width: 200px;
+            height: auto;
+            margin: 15px;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: transform 0.3s;
+        }
+        .anime-list img:hover {
+            transform: scale(1.1);
+        }
+        .theory-section {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        textarea {
+            width: 80%;
+            height: 100px;
+            margin-top: 10px;
+        }
+        .theories {
+            text-align: left;
+            margin: 20px auto;
+            width: 80%;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Anime Fan Theories</h1>
+    <div class="anime-list">
+        <img src="nftbg.jpg" alt="Naruto" onclick="showTheorySection('Naruto ', 'nftbg.jpg')">
+        <img src="opftbg.jpg" alt="One Piece" onclick="showTheorySection('One Piece','opftbg.jpg')">
+        <img src="aotftbg.jpg" alt="Attack on Titan" onclick="showTheorySection('Attack on Titan', 'aotftbg.jpg')">
+        <img src="bftbg.jpg" alt="Bleach" onclick="showTheorySection('Bleach ', 'bftbg.jpg')">
+        <img src="dbftbg.jpg" alt="Drangon Ball" onclick="showTheorySection('Dragon Ball ', 'dgftbg.jpg')">
+        <img src="dsftbg.jpg" alt="Demon Slayer" onclick="showTheorySection('Demon Slayer ', 'dsftbg.jpg')">
+        <img src="JJKftbg.jpg" alt="JuJutsu Kaisen" onclick="showTheorySection('JuJutsu Kaisen ', 'jjkftbg.jpg')">
+    </div>
+    
+    <div id="theory-section" class="theory-section">
+        <h2 id="anime-title"></h2>
+        <textarea id="theory-text" placeholder="Write your theory here..."></textarea>
+        <br>
+        <button onclick="submitTheory()">Submit Theory</button>
+        <div class="theories" id="theory-display"></div>
+    </div>
+
+    <script>
+        let selectedAnime = "";
+        function showTheorySection(anime, bgImage) {
+            selectedAnime = anime;
+            document.getElementById("anime-title").innerText = `Fan Theories for ${anime}`;
+            document.getElementById("theory-section").style.display = "block";
+            document.body.style.backgroundImage = `url('${bgImage}')`;
+            document.body.style.backgroundSize = "cover";
+            document.body.style.backgroundPosition = "center";
+            loadTheories();
+        }
+
+        function submitTheory() {
+            let text = document.getElementById("theory-text").value;
+            if (text.trim() === "") return;
+            
+            let theories = JSON.parse(localStorage.getItem(selectedAnime) || "[]");
+            theories.push(text);
+            localStorage.setItem(selectedAnime, JSON.stringify(theories));
+            document.getElementById("theory-text").value = "";
+            loadTheories();
+        }
+
+        function loadTheories() {
+            let theories = JSON.parse(localStorage.getItem(selectedAnime) || "[]");
+            let display = document.getElementById("theory-display");
+            display.innerHTML = theories.map(theory => `<p>${theory}</p>`).join("<hr>");
+        }
+    </script>
+</body>
+</html>

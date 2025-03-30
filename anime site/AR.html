@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Recommendations</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-image: url('indexbg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            margin-top: 5%;
+        }
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        textarea, input {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 1rem;
+        }
+        button {
+            background: blue;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: darkblue;
+        }
+        .recommendations {
+            margin-top: 20px;
+            text-align: left;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            width: 80%;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Anime Recommendations</h1>
+        <p>Recommend an anime for newbies or fellow weebs and share your experience!</p>
+        <input type="text" id="animeTitle" placeholder="Anime Title">
+        <textarea id="animeExperience" rows="4" placeholder="Share your experience..."></textarea>
+        <button onclick="submitRecommendation()">Submit Recommendation</button>
+        <div class="recommendations" id="recommendationList">
+            <h2>Community Recommendations</h2>
+            <div id="recommendations"></div>
+        </div>
+    </div>
+
+    <script>
+        function submitRecommendation() {
+            let title = document.getElementById('animeTitle').value;
+            let experience = document.getElementById('animeExperience').value;
+            
+            if (title.trim() === '' || experience.trim() === '') {
+                alert('Please enter both title and experience.');
+                return;
+            }
+            
+            let recommendationSection = document.getElementById('recommendations');
+            let newRecommendation = document.createElement('div');
+            newRecommendation.innerHTML = `<strong>${title}</strong>: ${experience}`;
+            newRecommendation.style.margin = '10px 0';
+            newRecommendation.style.padding = '10px';
+            newRecommendation.style.borderBottom = '1px solid white';
+            
+            recommendationSection.appendChild(newRecommendation);
+            
+            document.getElementById('animeTitle').value = '';
+            document.getElementById('animeExperience').value = '';
+        }
+    </script>
+</body>
+</html>
